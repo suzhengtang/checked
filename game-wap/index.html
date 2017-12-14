@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script>
+		(function (doc, win) {
+			var docEl = doc.documentElement;
+			var	resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+//			console.log(resizeEvt);
+			var	recalc = function () {
+				var clientWidth = docEl.clientWidth;
+				if (!clientWidth) return;
+				if (clientWidth >= 640) {
+					docEl.style.fontSize = '100px';
+				} else {
+					docEl.style.fontSize = 100 * (docEl.clientWidth / 320) + 'px';
+				}
+			};
+			if (!doc.addEventListener) return;
+			win.addEventListener(resizeEvt, recalc, false);
+			doc.addEventListener('DOMContentLoaded', recalc, false);
+		})(document, window);
+	</script>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta content="telephone=no" name="format-detection">
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link rel="stylesheet" href="css/index.css">
+	<script src="lib/jquery-1.7.2-min.js"></script>
+	<script src="lib/easing.js"></script>
+
+</head>
+<body>
+<div class="main_bg">
+	<div class="main">
+		<div class="num_mask"></div>
+		<div class="num_box">
+			<div class="num">
+				<div class="num-top"></div>
+				<div class="num-bottom"></div>
+			</div>
+			<div class="num">
+				<div class="num-top"></div>
+				<div class="num-bottom"></div>
+			</div>
+			<div class="num">
+				<div class="num-top"></div>
+				<div class="num-bottom"></div>
+			</div>
+			<div class="num lastnum">
+				<div class="num-top"></div>
+				<div class="num-bottom"></div>
+			</div>
+			<div class="btn"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	function numRand() {
+		var x = 9999; //上限
+		var y = 1111; //下限
+		var rand = parseInt(Math.random() * (x - y + 1) + y);
+		return rand;
+	}
+
+	var isBegin = false;
+	$(function () {
+		var fontsize = parseFloat(document.documentElement.style.fontSize)
+		var width = 138/fontsize;
+		var height = 210/fontsize;
+		var beilv  = 0.582/width;
+
+		var u = height*beilv;
+		$('.btn').click(function () {
+			if (isBegin) return false;
+			isBegin = true;
+			$(".num").css('backgroundPositionY', '0rem');
+			var result = numRand();
+			var num_arr = (result + '').split('');
+			$(".num").each(function (index) {
+				var _num = $(this);
+				setTimeout(function () {
+					_num.animate({
+						backgroundPositionY: (u * 60) - (u * num_arr[index])+"rem"
+					}, {
+						duration: 6000 + index * 3000,
+						easing: "easeInOutCirc",
+						complete: function () {
+							if (index == 3) isBegin = false;
+						}
+					});
+				}, index * 300);
+			});
+		});
+	});
+</script>
+</body>
+</html>
